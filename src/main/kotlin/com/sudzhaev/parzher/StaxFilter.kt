@@ -42,14 +42,7 @@ class StaxFilter(val xmlFilters: List<XMLFilter>) : EventFilter {
             .forEach { filterTag ->
                 val lastRead = readStack.peekOrNull()
                 val parentTag = reversedFlatFilter[filterTag]
-                if (lastRead != null) {
-                    if (parentTag == lastRead) {
-                        filterStack.push(filterStack.peek().flatMap { it.nestedFilters })
-                        readStack.push(filterTag)
-                        return true
-                    }
-                }
-                if (parentTag == null) {
+                if (parentTag == null || lastRead == parentTag) {
                     filterStack.push(filterStack.peek().flatMap { it.nestedFilters })
                     readStack.push(filterTag)
                     return true
