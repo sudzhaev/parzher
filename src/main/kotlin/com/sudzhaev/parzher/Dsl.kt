@@ -1,8 +1,12 @@
 package com.sudzhaev.parzher
 
+@DslMarker
+annotation class XmlFilterDsl
 
+@XmlFilterDsl
 fun filters(block: XMLFilterListBuilder.() -> Unit) = XMLFilterListBuilder().apply(block).build()
 
+@XmlFilterDsl
 class XMLFilterListBuilder {
 
     private val xmlFilters = mutableListOf<XMLFilter>()
@@ -15,6 +19,7 @@ class XMLFilterListBuilder {
     fun build() = xmlFilters
 }
 
+@XmlFilterDsl
 class XMLFilterBuilder {
 
     var name: String = ""
@@ -32,6 +37,7 @@ class XMLFilterBuilder {
     fun build() = XMLFilter(Tag(name, attributes), nestedTags)
 }
 
+@XmlFilterDsl
 class AttributeListBuilder {
 
     private val attributes = mutableListOf<Attribute>()
@@ -43,6 +49,7 @@ class AttributeListBuilder {
     fun build() = attributes
 }
 
+@XmlFilterDsl
 class AttributeBuilder {
 
     var name = ""
