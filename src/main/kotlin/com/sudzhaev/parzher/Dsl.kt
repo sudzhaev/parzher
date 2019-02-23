@@ -22,7 +22,8 @@ class XMLFilterListBuilder {
 @XmlFilterDsl
 class XMLFilterBuilder {
 
-    var name: String = ""
+    var name = ""
+    var terminate = false
     private val attributes = mutableListOf<Attribute>()
     private val nestedTags = mutableListOf<XMLFilter>()
     private val extract = mutableListOf<String>()
@@ -39,7 +40,7 @@ class XMLFilterBuilder {
         extract.addAll(ExtractBuilder().apply(block).build());
     }
 
-    fun build() = XMLFilter(Tag(name, attributes, extract), nestedTags)
+    fun build() = XMLFilter(Tag(name, attributes, extract, terminate), nestedTags)
 }
 
 @XmlFilterDsl

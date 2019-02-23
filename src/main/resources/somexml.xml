@@ -30,4 +30,21 @@
             <element size="s" name="100"/>
         </elements>
     </div>
+    <div class="name">
+        <variables>
+            <name>Haha</name>
+        </variables>
+        <elements val="2" param="zzz">
+            <element size="s" name="1"/>
+            <element size="m" name="2"/>
+            <element size="l" name="3"/>
+            <element size="s" name="4"/>
+        </elements>
+        <elements val="2" param="fff">
+            <element size="s" name="5"/>
+            <element size="m" name="6"/>
+            <element size="l" name="7"/>
+            <element size="s" name="8"/>
+        </elements>
+    </div>
 </tag>

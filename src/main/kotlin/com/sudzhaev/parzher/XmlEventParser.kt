@@ -1,41 +1,31 @@
 package com.sudzhaev.parzher
 
 import java.util.*
-import javax.xml.stream.EventFilter
 import javax.xml.stream.events.EndElement
 import javax.xml.stream.events.StartElement
 import javax.xml.stream.events.XMLEvent
 
-
-class StaxFilter(
-    private val xmlFilters: List<XMLFilter>,
-    private val acceptedCallback: (Tag) -> Unit
-) : EventFilter {
+class XmlEventParser(private val xmlFilters: List<XMLFilter>) {
 
     private val reversedFlatFilter: Map<Tag, Tag?> by lazy {
-        xmlFilters
-            .map { it.reverse() }
-            .reduce { acc, value -> acc + value }
+        xmlFilters.map { it.reverse() }.sum()
     }
 
     private val skipStack = Stack<String>()
     private val readStack = Stack<Tag>()
     private val filterStack = Stack<List<XMLFilter>>().apply { push(xmlFilters) }
 
-    var filterEnded = false
-
-    override fun accept(event: XMLEvent): Boolean {
+    fun accept(event: XMLEvent): WrappedTag? {
         return when {
             event.isStartElement -> handleStartElement(event as StartElement)
             event.isEndElement -> handleEndElement(event as EndElement)
-            else -> false
+            else -> null
         }
     }
 
-    private fun handleStartElement(startElement: StartElement): Boolean {
-        filterEnded = false
+    private fun handleStartElement(startElement: StartElement): StartTag? {
         if (skipStack.isNotEmpty()) {
-            return false
+            return null
         }
         val tagName = startElement.localname()
         filterStack.peek()
@@ -49,28 +39,23 @@ class StaxFilter(
                 if (parentTag == null || lastRead == parentTag) {
                     filterStack.push(filterStack.peek().flatMap { it.nestedFilters })
                     readStack.push(filterTag)
-                    acceptedCallback(filterTag)
-                    return true
+                    return StartTag(filterTag)
                 }
                 skipStack.push(tagName)
             }
-        return false
+        return null
     }
 
-    private fun handleEndElement(endElement: EndElement): Boolean {
+    private fun handleEndElement(endElement: EndElement): EndTag? {
         val tagName = endElement.localname()
         if (skipStack.peekOrNull() == tagName) {
             skipStack.pop()
-
         }
         if (readStack.peekOrNull()?.name == tagName) {
-            readStack.pop()
             filterStack.pop()
-            if (readStack.isEmpty()) {
-                println("filter ended")
-                filterEnded = true
-            }
+            readStack.pop()
+            return EndTag
         }
-        return false
+        return null
     }
 }

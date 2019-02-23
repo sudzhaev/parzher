@@ -26,3 +26,10 @@ fun List<Attribute>.allMatch(startElement: StartElement) = all { (name, value) -
 fun <T> Stack<T>.peekOrNull(): T? = if (isNotEmpty()) peek() else null
 
 fun StartElement.extract(attributes: List<String>) = attributes.map { it to this[it] }.toMap()
+
+fun <T> Iterable<Map<T, T?>>.sum(): Map<T, T?> {
+    if (!iterator().hasNext()) {
+        return emptyMap()
+    }
+    return reduce { acc, value -> acc + value }
+}
