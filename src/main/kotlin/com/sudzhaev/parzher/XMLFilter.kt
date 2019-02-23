@@ -2,7 +2,7 @@ package com.sudzhaev.parzher
 
 data class Attribute(val name: String, val value: String)
 
-data class Tag(val name: String, val attributes: List<Attribute>)
+data class Tag(val name: String, val attributes: List<Attribute>, val extract: List<String>)
 
 data class XMLFilter(val tag: Tag, val nestedFilters: List<XMLFilter>) {
 

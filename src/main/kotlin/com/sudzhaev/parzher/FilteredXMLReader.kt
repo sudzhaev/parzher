@@ -1,13 +1,12 @@
 package com.sudzhaev.parzher
 
-import java.util.NoSuchElementException
-import javax.xml.stream.EventFilter
+import java.util.*
 import javax.xml.stream.XMLEventReader
 import javax.xml.stream.XMLStreamException
 import javax.xml.stream.events.XMLEvent
 import javax.xml.stream.util.EventReaderDelegate
 
-class FilteredXMLReader(reader: XMLEventReader, private val eventFilter: EventFilter) : EventReaderDelegate(reader) {
+class FilteredXMLReader(reader: XMLEventReader, private val staxFilter: StaxFilter) : EventReaderDelegate(reader) {
 
     private var cache: XMLEvent? = null
 
@@ -38,7 +37,7 @@ class FilteredXMLReader(reader: XMLEventReader, private val eventFilter: EventFi
         }
         if (super.hasNext()) {
             val event = super.nextEvent()
-            return if (eventFilter.accept(event)) {
+            return if (staxFilter.accept(event)) {
                 cache = null
                 event
             } else {
@@ -49,9 +48,7 @@ class FilteredXMLReader(reader: XMLEventReader, private val eventFilter: EventFi
         }
     }
 
-    override fun nextTag(): XMLEvent {
-        throw UnsupportedOperationException()
-    }
+    override fun nextTag(): XMLEvent = throw UnsupportedOperationException()
 
     override fun peek(): XMLEvent? {
         if (cache != null) {
@@ -59,7 +56,7 @@ class FilteredXMLReader(reader: XMLEventReader, private val eventFilter: EventFi
         }
         while (true) {
             val event = super.peek() ?: return null
-            if (eventFilter.accept(event)) {
+            if (staxFilter.accept(event)) {
                 cache = event
                 return event
             }

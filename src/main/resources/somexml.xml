@@ -3,13 +3,13 @@
         <variables>
             <name>Haha</name>
         </variables>
-        <elements val="2">
+        <elements val="2" param="ppp">
             <element size="s" name="1"/>
             <element size="m" name="2"/>
             <element size="l" name="3"/>
             <element size="s" name="4"/>
         </elements>
-        <elements val="1">
+        <elements val="1" param="qqq">
             <element size="s" name="5"/>
             <element size="m" name="6"/>
             <element size="l" name="7"/>
@@ -17,13 +17,13 @@
         </elements>
     </div>
     <div class="gogo">
-        <elements val="2">
+        <elements val="2" param="ccc">
             <element size="s" name="90"/>
             <element size="m" name="90"/>
             <element size="l" name="90"/>
             <element size="s" name="90"/>
         </elements>
-        <elements val="1">
+        <elements val="1" param="ddd">
             <element size="s" name="100"/>
             <element size="m" name="100"/>
             <element size="l" name="100"/>

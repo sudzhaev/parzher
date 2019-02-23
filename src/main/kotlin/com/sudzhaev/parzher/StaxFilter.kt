@@ -7,7 +7,10 @@ import javax.xml.stream.events.StartElement
 import javax.xml.stream.events.XMLEvent
 
 
-class StaxFilter(val xmlFilters: List<XMLFilter>) : EventFilter {
+class StaxFilter(
+    private val xmlFilters: List<XMLFilter>,
+    private val acceptedCallback: (Tag) -> Unit
+) : EventFilter {
 
     private val reversedFlatFilter: Map<Tag, Tag?> by lazy {
         xmlFilters
@@ -17,19 +20,20 @@ class StaxFilter(val xmlFilters: List<XMLFilter>) : EventFilter {
 
     private val skipStack = Stack<String>()
     private val readStack = Stack<Tag>()
-    private val filterStack = Stack<List<XMLFilter>>().apply {
-        push(xmlFilters)
-    }
+    private val filterStack = Stack<List<XMLFilter>>().apply { push(xmlFilters) }
+
+    var filterEnded = false
 
     override fun accept(event: XMLEvent): Boolean {
         return when {
             event.isStartElement -> handleStartElement(event as StartElement)
             event.isEndElement -> handleEndElement(event as EndElement)
-            else -> return false
+            else -> false
         }
     }
 
     private fun handleStartElement(startElement: StartElement): Boolean {
+        filterEnded = false
         if (skipStack.isNotEmpty()) {
             return false
         }
@@ -45,6 +49,7 @@ class StaxFilter(val xmlFilters: List<XMLFilter>) : EventFilter {
                 if (parentTag == null || lastRead == parentTag) {
                     filterStack.push(filterStack.peek().flatMap { it.nestedFilters })
                     readStack.push(filterTag)
+                    acceptedCallback(filterTag)
                     return true
                 }
                 skipStack.push(tagName)
@@ -61,6 +66,10 @@ class StaxFilter(val xmlFilters: List<XMLFilter>) : EventFilter {
         if (readStack.peekOrNull()?.name == tagName) {
             readStack.pop()
             filterStack.pop()
+            if (readStack.isEmpty()) {
+                println("filter ended")
+                filterEnded = true
+            }
         }
         return false
     }
