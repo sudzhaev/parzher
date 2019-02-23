@@ -30,35 +30,23 @@ fun main() {
 }
 
 fun buildFilterDsl() = filters {
-    tag {
-        name = "div"
+    tag("div") {
         attributes {
-            attribute {
-                name = "class"
-                value = "name"
-            }
+            attribute(name = "class", value = "name")
         }
         nested {
-            tag {
-                name = "elements"
+            tag("elements") {
                 attributes {
-                    attribute {
-                        name = "val"
-                        value = "2"
-                    }
+                    attribute(name = "val", value = "2")
                 }
                 extract {
                     attribute("param")
                 }
                 nested {
-                    tag {
-                        name = "element"
+                    tag("element") {
                         terminate = true
                         attributes {
-                            attribute {
-                                name = "size"
-                                value = "s"
-                            }
+                            attribute(name = "size", value = "s")
                         }
                         extract {
                             attribute("size")

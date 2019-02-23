@@ -11,8 +11,8 @@ class XMLFilterListBuilder {
 
     private val xmlFilters = mutableListOf<XMLFilter>()
 
-    fun tag(block: XMLFilterBuilder.() -> Unit) {
-        xmlFilters.add(XMLFilterBuilder().apply(block).build())
+    fun tag(name: String, block: XMLFilterBuilder.() -> Unit) {
+        xmlFilters.add(XMLFilterBuilder(name).apply(block).build())
     }
 
 
@@ -20,9 +20,8 @@ class XMLFilterListBuilder {
 }
 
 @XmlFilterDsl
-class XMLFilterBuilder {
+class XMLFilterBuilder(val name: String) {
 
-    var name = ""
     var terminate = false
     private val attributes = mutableListOf<Attribute>()
     private val nestedTags = mutableListOf<XMLFilter>()
@@ -60,8 +59,8 @@ class AttributeListBuilder {
 
     private val attributes = mutableListOf<Attribute>()
 
-    fun attribute(block: AttributeBuilder.() -> Unit) {
-        attributes.add(AttributeBuilder().apply(block).build())
+    fun attribute(name: String, value: String) {
+        attributes.add(Attribute(name, value))
     }
 
     fun build() = attributes
