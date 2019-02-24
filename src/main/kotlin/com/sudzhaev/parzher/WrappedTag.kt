@@ -1,5 +1,5 @@
 package com.sudzhaev.parzher
 
-sealed class WrappedTag()
+sealed class WrappedTag
 data class StartTag(val tag: Tag): WrappedTag()
 object EndTag: WrappedTag()

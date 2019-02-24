@@ -15,9 +15,7 @@ repositories {
 
 dependencies {
     compile(kotlin("stdlib-jdk8"))
-    compile("org.springframework.batch:spring-batch-core:3.0.5.RELEASE")
-    compile("org.springframework:spring-oxm:3.0.5.RELEASE")
-    compile("com.github.tinder:statemachine:0.1.2")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
     testCompile("junit", "junit", "4.12")
 }
 

@@ -1,31 +1,21 @@
 package com.sudzhaev.parzher
 
 import java.io.FileInputStream
-import java.util.*
 import javax.xml.stream.XMLInputFactory
-import javax.xml.stream.events.StartElement
+
+data class ValueDto(val param: String, val size: String)
 
 fun main() {
     val xmlInputFactory = XMLInputFactory.newInstance()
     val xmlEventReader = xmlInputFactory.createXMLEventReader(FileInputStream("src/main/resources/somexml.xml"))
     val filters = buildFilterDsl()
     val xmlEventParser = XmlEventParser(filters)
-    val attributeStack = Stack<Pair<Tag, Map<String, String?>>>()
-    while (xmlEventReader.hasNext()) {
-        val xmlEvent = xmlEventReader.nextEvent()
-        val wrappedTag = xmlEventParser.accept(xmlEvent) ?: continue
-        when (wrappedTag) {
-            is StartTag -> {
-                val tag = wrappedTag.tag
-                val startElement = xmlEvent as StartElement
-                val extractedAttributes = startElement.extract(tag.extract)
-                attributeStack.push(tag to extractedAttributes)
-                if (tag.terminate) {
-                    println(attributeStack.toMap())
-                }
-            }
-            EndTag -> attributeStack.pop()
-        }
+    val extractor = DataExtractor(xmlEventReader, xmlEventParser)
+    val objectRetriever = ObjectExtractor(ValueDto::class.java)
+    var attrs = extractor.next()
+    while (attrs != null) {
+        println(objectRetriever.convert(attrs))
+        attrs = extractor.next()
     }
 }
 
