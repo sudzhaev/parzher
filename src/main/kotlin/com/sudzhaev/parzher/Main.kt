@@ -21,7 +21,7 @@ fun main() {
                 val extractedAttributes = startElement.extract(tag.extract)
                 attributeStack.push(tag to extractedAttributes)
                 if (tag.terminate) {
-                    println(attributeStack.map { it.second })
+                    println(attributeStack.toMap())
                 }
             }
             EndTag -> attributeStack.pop()

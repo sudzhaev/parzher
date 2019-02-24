@@ -33,3 +33,5 @@ fun <T> Iterable<Map<T, T?>>.sum(): Map<T, T?> {
     }
     return reduce { acc, value -> acc + value }
 }
+
+fun Stack<Pair<Tag, Map<String, String?>>>.toMap() = map { it.second }.reduce { acc, map -> acc + map }

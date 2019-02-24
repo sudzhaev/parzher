@@ -36,7 +36,7 @@ class XMLFilterBuilder(val name: String) {
     }
 
     fun extract(block: ExtractBuilder.() -> Unit) {
-        extract.addAll(ExtractBuilder().apply(block).build());
+        extract.addAll(ExtractBuilder().apply(block).build())
     }
 
     fun build() = XMLFilter(Tag(name, attributes, extract, terminate), nestedTags)
@@ -64,13 +64,4 @@ class AttributeListBuilder {
     }
 
     fun build() = attributes
-}
-
-@XmlFilterDsl
-class AttributeBuilder {
-
-    var name = ""
-    var value = ""
-
-    fun build() = Attribute(name, value)
 }
