@@ -32,7 +32,7 @@ class XmlEventParser(private val xmlFilters: List<XMLFilter>) {
             .asSequence()
             .map { it.tag }
             .filter { it.name == tagName }
-            .filter { it.attributes.allMatch(startElement) }
+            .filter { it.attributes in startElement }
             .forEach { filterTag ->
                 val lastRead = readStack.peekOrNull()
                 val parentTag = reversedFlatFilter[filterTag]

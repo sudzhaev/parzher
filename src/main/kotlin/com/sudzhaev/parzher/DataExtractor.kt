@@ -16,7 +16,7 @@ class DataExtractor(private val xmlEventReader: XMLEventReader, private val xmlE
                 is StartTag -> {
                     val tag = wrappedTag.tag
                     val startElement = xmlEvent as StartElement
-                    val extractedAttributes = startElement.extract(tag.extract)
+                    val extractedAttributes = startElement.getAttributes(tag.extract)
                     attributeStack.push(tag to extractedAttributes)
                     if (tag.terminate) {
                         return attributeStack.toMap()

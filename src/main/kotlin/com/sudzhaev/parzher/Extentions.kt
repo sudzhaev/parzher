@@ -1,31 +1,23 @@
 package com.sudzhaev.parzher
 
 import java.util.*
+import javax.xml.namespace.QName
 import javax.xml.stream.events.EndElement
 import javax.xml.stream.events.StartElement
 import javax.xml.stream.events.Attribute as XmlAttribute
 
-operator fun StartElement.get(attributeName: String): String? {
-    attributes.asSequence()
-        .map { it as XmlAttribute }
-        .map { it.name.localPart to it.value }
-        .forEach { (name, value) ->
-            if (attributeName == name) {
-                return value
-            }
-        }
-    return null
-}
+operator fun StartElement.get(attributeName: String) = getAttributeByName(QName.valueOf(attributeName))?.value
 
 fun StartElement.localname(): String = name.localPart
 
 fun EndElement.localname(): String = name.localPart
 
-fun List<Attribute>.allMatch(startElement: StartElement) = all { (name, value) -> startElement[name] == value }
+operator fun StartElement.contains(attributes: List<Attribute>) =
+    attributes.all { (name, value) -> this[name] == value }
 
 fun <T> Stack<T>.peekOrNull(): T? = if (isNotEmpty()) peek() else null
 
-fun StartElement.extract(attributes: List<Extract<Any>>): Map<String, Any?> {
+fun StartElement.getAttributes(attributes: List<Extract<Any>>): Map<String, Any?> {
     return attributes
         .map { (attributeName, converter) -> attributeName to converter(this[attributeName]) }
         .toMap()
