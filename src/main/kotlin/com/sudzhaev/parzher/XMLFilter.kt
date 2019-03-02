@@ -5,7 +5,7 @@ data class Attribute(val name: String, val value: String)
 data class Tag(
     val name: String,
     val attributes: List<Attribute> = emptyList(),
-    val extract: List<String> = emptyList(),
+    val extract: List<Extract<Any>> = emptyList(),
     val terminate: Boolean = false
 )
 
@@ -22,3 +22,5 @@ data class XMLFilter(val tag: Tag, val nestedFilters: List<XMLFilter>) {
         putAll(nestedFilters.map { it.reverse(tag) }.sum())
     }
 }
+
+data class Extract<out T>(val attributeName: String, val converter: (String?) -> T)

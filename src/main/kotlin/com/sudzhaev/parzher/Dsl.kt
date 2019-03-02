@@ -15,7 +15,6 @@ class XMLFilterListBuilder {
         xmlFilters.add(XMLFilterBuilder(name).apply(block).build())
     }
 
-
     fun build() = xmlFilters
 }
 
@@ -25,7 +24,7 @@ class XMLFilterBuilder(val name: String) {
     var terminate = false
     private val attributes = mutableListOf<Attribute>()
     private val nestedTags = mutableListOf<XMLFilter>()
-    private val extract = mutableListOf<String>()
+    private val extract = mutableListOf<Extract<Any>>()
 
     fun attributes(block: AttributeListBuilder.() -> Unit) {
         attributes.addAll(AttributeListBuilder().apply(block).build())
@@ -45,10 +44,14 @@ class XMLFilterBuilder(val name: String) {
 @XmlFilterDsl
 class ExtractBuilder {
 
-    private val attributes = mutableListOf<String>()
+    private val attributes = mutableListOf<Extract<Any>>()
 
     fun attribute(attribute: String) {
-        attributes.add(attribute)
+        attributes.add(Extract(attribute) { it ?: "null" })
+    }
+
+    fun <T : Any> attribute(attribute: String, extractor: (String?) -> T) {
+        attributes.add(Extract(attribute, extractor))
     }
 
     fun build() = attributes

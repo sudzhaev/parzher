@@ -25,13 +25,17 @@ fun List<Attribute>.allMatch(startElement: StartElement) = all { (name, value) -
 
 fun <T> Stack<T>.peekOrNull(): T? = if (isNotEmpty()) peek() else null
 
-fun StartElement.extract(attributes: List<String>) = attributes.map { it to this[it] }.toMap()
-
-fun <T> Iterable<Map<T, T?>>.sum(): Map<T, T?> {
-    if (!iterator().hasNext()) {
-        return emptyMap()
-    }
-    return reduce { acc, value -> acc + value }
+fun StartElement.extract(attributes: List<Extract<Any>>): Map<String, Any?> {
+    return attributes
+        .map { (attributeName, converter) -> attributeName to converter(this[attributeName]) }
+        .toMap()
 }
 
-fun Stack<Pair<Tag, Map<String, String?>>>.toMap() = map { it.second }.reduce { acc, map -> acc + map }
+fun <T> Iterable<Map<T, T?>>.sum(): Map<T, T?> {
+    return when {
+        !iterator().hasNext() -> emptyMap()
+        else -> reduce { acc, value -> acc + value }
+    }
+}
+
+fun Stack<Pair<Tag, Map<String, Any?>>>.toMap() = map { it.second }.reduce { acc, map -> acc + map }

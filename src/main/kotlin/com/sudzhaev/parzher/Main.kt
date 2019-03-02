@@ -3,19 +3,19 @@ package com.sudzhaev.parzher
 import java.io.FileInputStream
 import javax.xml.stream.XMLInputFactory
 
-data class ValueDto(val param: String, val size: String)
+data class ValueDto(val param: String, val size: String, val num: Int)
 
 fun main() {
     val xmlInputFactory = XMLInputFactory.newInstance()
     val xmlEventReader = xmlInputFactory.createXMLEventReader(FileInputStream("src/main/resources/somexml.xml"))
     val filters = buildFilterDsl()
     val xmlEventParser = XmlEventParser(filters)
-    val extractor = DataExtractor(xmlEventReader, xmlEventParser)
-    val objectRetriever = ObjectExtractor(ValueDto::class.java)
-    var attrs = extractor.next()
+    val dataExtractor = DataExtractor(xmlEventReader, xmlEventParser)
+    val objectExtractor = ObjectExtractor(ValueDto::class.java)
+    var attrs = dataExtractor.next()
     while (attrs != null) {
-        println(objectRetriever.convert(attrs))
-        attrs = extractor.next()
+        println(objectExtractor.get(attrs))
+        attrs = dataExtractor.next()
     }
 }
 
@@ -31,6 +31,7 @@ fun buildFilterDsl() = filters {
                 }
                 extract {
                     attribute("param")
+                    attribute("num") { it?.toInt() ?: 0 }
                 }
                 nested {
                     tag("element") {
