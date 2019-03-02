@@ -21,6 +21,9 @@ class ParzherIterator<T>(private val parzher: Parzher<T>) : Iterator<T> {
     private var cache: T? = null
 
     override fun hasNext(): Boolean {
+        if (cache != null) {
+            return true
+        }
         cache = parzher.next()
         return cache != null
     }
@@ -29,10 +32,8 @@ class ParzherIterator<T>(private val parzher: Parzher<T>) : Iterator<T> {
         if (cache == null && !hasNext()) {
             throw NoSuchElementException()
         }
-        try {
-            return cache!!
-        } finally {
-            cache == null
-        }
+        val item = cache!!
+        cache = null
+        return item
     }
 }
