@@ -15,7 +15,10 @@ class XMLFilterListBuilder {
         xmlFilters.add(XMLFilterBuilder(name).apply(block).build())
     }
 
-    fun build() = xmlFilters
+    fun build(): MutableList<XMLFilter> {
+        if (xmlFilters.isEmpty()) throw InvalidFilterException("Filter list cannot be empty")
+        return xmlFilters
+    }
 }
 
 @XmlFilterDsl
@@ -42,7 +45,10 @@ class XMLFilterBuilder(val name: String) {
         terminate = true
     }
 
-    fun build() = XMLFilter(Tag(name, attributes, extract, terminate), nestedTags)
+    fun build(): XMLFilter {
+        if (name.isEmpty()) throw InvalidFilterException("Tag name cannot be empty")
+        return XMLFilter(Tag(name, attributes, extract, terminate), nestedTags)
+    }
 }
 
 @XmlFilterDsl
@@ -58,7 +64,15 @@ class ExtractBuilder {
         attributes.add(Extract(attribute, extractor))
     }
 
-    fun build() = attributes
+    fun build(): MutableList<Extract<Any>> {
+        if (attributes.isEmpty()) throw InvalidFilterException(
+            """
+            Extract attributes cannot be empty:
+            specify at least one attribute or
+            remove extract block""".trimIndent()
+        )
+        return attributes
+    }
 }
 
 @XmlFilterDsl
@@ -70,5 +84,13 @@ class AttributeListBuilder {
         attributes.add(Attribute(name, value))
     }
 
-    fun build() = attributes
+    fun build(): MutableList<Attribute> {
+        if (attributes.isEmpty()) throw InvalidFilterException(
+            """
+            Attribute list cannot be empty:
+            specify at least one attribute or
+            remove attribute block""".trimIndent()
+        )
+        return attributes
+    }
 }
