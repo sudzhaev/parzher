@@ -10,10 +10,7 @@ fun main() {
     val xmlEventReader = xmlInputFactory.createXMLEventReader(FileInputStream("src/main/resources/somexml.xml"))
     val filters = buildFilterDsl()
     val parzher = Parzher(ValueDto::class.java, xmlEventReader, filters)
-    while (true) {
-        val valueDto = parzher.next() ?: break
-        println(valueDto)
-    }
+    parzher.forEach { println(it) }
 }
 
 fun buildFilterDsl() = filters {
@@ -32,7 +29,7 @@ fun buildFilterDsl() = filters {
                 }
                 nested {
                     tag("element") {
-                        terminate = true
+                        terminate()
                         attributes {
                             attribute(name = "size", value = "s")
                         }

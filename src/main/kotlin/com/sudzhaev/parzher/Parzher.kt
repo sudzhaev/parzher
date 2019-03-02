@@ -2,15 +2,37 @@ package com.sudzhaev.parzher
 
 import javax.xml.stream.XMLEventReader
 
-class Parzher<T>(val clazz: Class<T>, xmlEventReader: XMLEventReader, filters: List<XMLFilter>) {
-    // TODO: implements Iterable
+class Parzher<T>(clazz: Class<T>, xmlEventReader: XMLEventReader, filters: List<XMLFilter>) : Iterable<T> {
 
     private val xmlEventParser = XmlEventParser(filters)
     private val dataExtractor = DataExtractor(xmlEventReader, xmlEventParser)
     private val objectExtractor = ObjectExtractor(clazz)
 
+    override fun iterator() = ParzherIterator<T>(this)
+
     fun next(): T? {
         val attrs = dataExtractor.next() ?: return null
         return objectExtractor.get(attrs);
+    }
+}
+
+class ParzherIterator<T>(private val parzher: Parzher<T>) : Iterator<T> {
+
+    private var cache: T? = null
+
+    override fun hasNext(): Boolean {
+        cache = parzher.next()
+        return cache != null
+    }
+
+    override fun next(): T {
+        if (cache == null && !hasNext()) {
+            throw NoSuchElementException()
+        }
+        try {
+            return cache!!
+        } finally {
+            cache == null
+        }
     }
 }
