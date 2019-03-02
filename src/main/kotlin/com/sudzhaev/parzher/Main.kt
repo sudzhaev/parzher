@@ -9,13 +9,10 @@ fun main() {
     val xmlInputFactory = XMLInputFactory.newInstance()
     val xmlEventReader = xmlInputFactory.createXMLEventReader(FileInputStream("src/main/resources/somexml.xml"))
     val filters = buildFilterDsl()
-    val xmlEventParser = XmlEventParser(filters)
-    val dataExtractor = DataExtractor(xmlEventReader, xmlEventParser)
-    val objectExtractor = ObjectExtractor(ValueDto::class.java)
-    var attrs = dataExtractor.next()
-    while (attrs != null) {
-        println(objectExtractor.get(attrs))
-        attrs = dataExtractor.next()
+    val parzher = Parzher(ValueDto::class.java, xmlEventReader, filters)
+    while (true) {
+        val valueDto = parzher.next() ?: break
+        println(valueDto)
     }
 }
 
