@@ -4,7 +4,42 @@ package com.sudzhaev.parzher
 annotation class XmlFilterDsl
 
 @XmlFilterDsl
-fun filters(block: XMLFilterListBuilder.() -> Unit) = XMLFilterListBuilder().apply(block).build()
+fun filters(block: XMLFilterListBuilder.() -> Unit): MutableList<XMLFilter> {
+    val xmlFilters = XMLFilterListBuilder().apply(block).build()
+    val terminates = countTerminates(xmlFilters)
+    if (terminates == 0) {
+        throw InvalidFilterException("Specify one terminate tag")
+    }
+    if (terminates > 1) {
+        throw InvalidFilterException("There can be only one terminate tag")
+    }
+    return xmlFilters
+}
+
+/**
+ * Count terminate tags in List<XmlFilter>
+ * @return 0 if no terminates found; 1 if only one terminate found; 2 if more than one terminate found
+ */
+private fun countTerminates(xmlFilters: List<XMLFilter>): Int {
+    return traverseFilters(xmlFilters, 0);
+}
+
+private fun traverseFilters(xmlFilters: List<XMLFilter>, upperCounter: Int): Int {
+    var terminateCount = 0
+    for (xmlFilter in xmlFilters) {
+        if (xmlFilter.tag.terminate) {
+            terminateCount += 1
+            if (terminateCount + upperCounter > 1) {
+                return terminateCount
+            }
+        }
+        terminateCount += traverseFilters(xmlFilter.nestedFilters, terminateCount)
+        if (terminateCount + upperCounter > 1) {
+            return terminateCount
+        }
+    }
+    return terminateCount
+}
 
 @XmlFilterDsl
 class XMLFilterListBuilder {
@@ -69,7 +104,7 @@ class ExtractBuilder {
             """
             Extract attributes cannot be empty:
             specify at least one attribute or
-            remove extract block""".trimIndent()
+            remove extract block""".simplify()
         )
         return attributes
     }
@@ -89,7 +124,7 @@ class AttributeListBuilder {
             """
             Attribute list cannot be empty:
             specify at least one attribute or
-            remove attribute block""".trimIndent()
+            remove attribute block""".simplify()
         )
         return attributes
     }

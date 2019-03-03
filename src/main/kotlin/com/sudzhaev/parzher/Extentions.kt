@@ -31,3 +31,5 @@ fun <T> Iterable<Map<T, T?>>.sum(): Map<T, T?> {
 }
 
 fun Stack<Pair<Tag, Map<String, Any?>>>.toMap() = map { it.second }.reduce { acc, map -> acc + map }
+
+fun String.simplify() = trimIndent().replace("\n", " ")
