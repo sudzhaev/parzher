@@ -23,13 +23,13 @@ fun StartElement.getAttributes(attributes: List<Extract<Any>>): Map<String, Any?
         .toMap()
 }
 
-fun <T> Iterable<Map<T, T?>>.sum(): Map<T, T?> {
+fun <T, R> Iterable<Map<T, R?>>.reduceSumming(): Map<T, R?> {
     return when {
         !iterator().hasNext() -> emptyMap()
         else -> reduce { acc, value -> acc + value }
     }
 }
 
-fun Stack<Pair<Tag, Map<String, Any?>>>.toMap() = map { it.second }.reduce { acc, map -> acc + map }
+fun Stack<Map<String, Any?>>.toMap() = reduceSumming()
 
 fun String.simplify() = trimIndent().replace("\n", " ")

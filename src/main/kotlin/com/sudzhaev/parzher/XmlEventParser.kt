@@ -8,7 +8,7 @@ import javax.xml.stream.events.XMLEvent
 class XmlEventParser(private val xmlFilters: List<XMLFilter>) {
 
     private val reversedFlatFilter: Map<Tag, Tag?> by lazy {
-        xmlFilters.map { it.reverse() }.sum()
+        xmlFilters.map { it.reverse() }.reduceSumming()
     }
 
     private val skipStack = Stack<String>()

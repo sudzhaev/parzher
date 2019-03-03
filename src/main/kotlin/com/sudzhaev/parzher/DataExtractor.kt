@@ -6,7 +6,7 @@ import javax.xml.stream.events.StartElement
 
 class DataExtractor(private val xmlEventReader: XMLEventReader, private val xmlEventParser: XmlEventParser) {
 
-    private val attributeStack = Stack<Pair<Tag, Map<String, Any?>>>()
+    private val attributeStack = Stack<Map<String, Any?>>()
 
     fun next(): Map<String, Any?>? {
         while (xmlEventReader.hasNext()) {
@@ -17,7 +17,7 @@ class DataExtractor(private val xmlEventReader: XMLEventReader, private val xmlE
                     val tag = wrappedTag.tag
                     val startElement = xmlEvent as StartElement
                     val extractedAttributes = startElement.getAttributes(tag.extract)
-                    attributeStack.push(tag to extractedAttributes)
+                    attributeStack.push(extractedAttributes)
                     if (tag.terminate) {
                         return attributeStack.toMap()
                     }

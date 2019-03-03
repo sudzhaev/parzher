@@ -19,7 +19,7 @@ data class XMLFilter(val tag: Tag, val nestedFilters: List<XMLFilter>) {
 
     private fun reverse(parentTag: Tag): Map<Tag, Tag?> = HashMap<Tag, Tag?>().apply {
         put(tag, parentTag)
-        putAll(nestedFilters.map { it.reverse(tag) }.sum())
+        putAll(nestedFilters.map { it.reverse(tag) }.reduceSumming())
     }
 }
 
