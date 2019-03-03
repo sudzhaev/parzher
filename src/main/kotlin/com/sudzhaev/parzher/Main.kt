@@ -3,7 +3,7 @@ package com.sudzhaev.parzher
 import java.io.FileInputStream
 import javax.xml.stream.XMLInputFactory
 
-data class ValueDto(val param: String, val size: String, val num: Int)
+data class ValueDto(val param: String, val size: String, val num: Int?)
 
 fun main() {
     val xmlInputFactory = XMLInputFactory.newInstance()
@@ -25,7 +25,7 @@ fun buildFilterDsl() = filters {
                 }
                 extract {
                     attribute("param")
-                    attribute("num") { it?.toInt() ?: 0 }
+                    attribute("num") { it?.toInt() }
                 }
                 nested {
                     tag("element") {
