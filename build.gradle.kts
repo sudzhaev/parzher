@@ -16,12 +16,19 @@ repositories {
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
-    testCompile("junit", "junit", "4.12")
+    testCompile("io.kotlintest:kotlintest-assertions:3.3.1")
+    testCompile("io.kotlintest:kotlintest-runner-junit5:3.3.0")
+
 }
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
