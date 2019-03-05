@@ -19,7 +19,7 @@ fun <T> Stack<T>.peekOrNull(): T? = if (isNotEmpty()) peek() else null
 
 fun StartElement.getAttributes(attributes: List<Extract<Any>>): Map<String, Any?> {
     return attributes
-        .map { (attributeName, converter) -> attributeName to converter(this[attributeName]) }
+        .map { (attributeName, propertyName, converter) -> propertyName to converter(this[attributeName]) }
         .toMap()
 }
 

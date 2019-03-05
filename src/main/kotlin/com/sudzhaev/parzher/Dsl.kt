@@ -91,12 +91,12 @@ class ExtractBuilder {
 
     private val attributes = mutableListOf<Extract<Any>>()
 
-    fun attribute(attribute: String) {
-        attributes.add(Extract(attribute) { it })
+    fun attribute(attributeName: String, newName: String = attributeName) {
+        attributes.add(Extract(attributeName, newName) { it })
     }
 
-    fun <T : Any> attribute(attribute: String, extractor: (String?) -> T?) {
-        attributes.add(Extract(attribute, extractor))
+    fun <T : Any> attribute(attributeName: String, propertyName: String = attributeName, extractor: (String?) -> T?) {
+        attributes.add(Extract(attributeName, propertyName, extractor))
     }
 
     fun build(): MutableList<Extract<Any>> {

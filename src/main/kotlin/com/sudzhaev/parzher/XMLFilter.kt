@@ -23,4 +23,4 @@ data class XMLFilter(val tag: Tag, val nestedFilters: List<XMLFilter>) {
     }
 }
 
-data class Extract<out T>(val attributeName: String, val converter: (String?) -> T?)
+data class Extract<out T>(val attributeName: String, val propertyName: String, val converter: (String?) -> T?)

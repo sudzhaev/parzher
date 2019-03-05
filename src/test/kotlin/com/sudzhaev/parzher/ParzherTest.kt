@@ -6,7 +6,7 @@ import io.kotlintest.specs.StringSpec
 import java.io.FileInputStream
 import javax.xml.stream.XMLInputFactory
 
-data class Div(val `class`: String)
+data class Div(val classAttr: String)
 
 class ParzherTest : StringSpec({
 
@@ -21,7 +21,7 @@ class ParzherTest : StringSpec({
             tag("div") {
                 terminate()
                 extract {
-                    attribute("class")
+                    attribute("class", newName = "classAttr")
                 }
             }
         }
