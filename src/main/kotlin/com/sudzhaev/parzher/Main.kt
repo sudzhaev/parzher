@@ -34,7 +34,7 @@ fun buildFilterDsl() = filters {
                 nested {
                     tag("element") {
                         terminate()
-                        unmarhsal(InnerClass::class.java, unmarshaller)
+                        unmarhsal(InnerClass::class.java, unmarshaller, resultHandler = ::innerClassOrNull)
                         attributes {
                             attribute(name = "size", value = "s")
                         }

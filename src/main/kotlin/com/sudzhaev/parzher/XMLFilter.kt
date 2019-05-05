@@ -29,8 +29,13 @@ data class XMLFilter(val tag: Tag, val nestedFilters: List<XMLFilter>) {
 
 data class Extract<out T>(val attributeName: String, val propertyName: String, val converter: (String?) -> T?)
 
-data class UnmarshalWrapper<T>(val clazz: Class<out T>, val unmarshaller: Unmarshaller, val propertyName: String = clazz.simpleName.decapitalize()) {
+data class UnmarshalWrapper<T>(
+    val clazz: Class<out T>,
+    val unmarshaller: Unmarshaller,
+    val propertyName: String = clazz.simpleName.decapitalize(),
+    val resultHandler: (T) -> T? = { it }
+) {
 
-    fun unmarshal(xmlEventReader: XMLEventReader): Pair<String, T> =
-        propertyName to unmarshaller.unmarshal(xmlEventReader, clazz).value
+    fun unmarshal(xmlEventReader: XMLEventReader): Pair<String, T?> =
+        propertyName to resultHandler(unmarshaller.unmarshal(xmlEventReader, clazz).value)
 }

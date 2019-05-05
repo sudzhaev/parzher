@@ -27,3 +27,16 @@ class InnerClass() {
         return "InnerClass(tagone=$tagone, tagtwo=$tagtwo)"
     }
 }
+
+fun innerClassOrNull(innerClass: InnerClass): InnerClass? {
+    if (innerClass.tagone == null && innerClass.tagtwo == null) {
+        return null
+    }
+    if (innerClass.tagtwo == null) {
+        val tagTwo = InnerClass.TagTwo()
+        tagTwo.attr = "default attr"
+        tagTwo.value = "default value"
+        innerClass.tagtwo = tagTwo
+    }
+    return innerClass
+}

@@ -44,7 +44,9 @@
             <element size="s" name="4"/>
         </elements>
         <elements val="2" param="fff">
-            <element size="s" name="5"/>
+            <element size="s" name="5">
+                <tagone>tag one</tagone>
+            </element>
             <element size="m" name="6"/>
             <element size="l" name="7"/>
             <element size="s" name="8"/>
