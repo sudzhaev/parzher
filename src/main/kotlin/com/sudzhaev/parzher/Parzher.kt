@@ -4,11 +4,10 @@ import javax.xml.stream.XMLEventReader
 
 class Parzher<T>(clazz: Class<T>, xmlEventReader: XMLEventReader, filters: List<XMLFilter>) : Iterable<T> {
 
-    private val xmlEventParser = XmlEventParser(filters)
-    private val dataExtractor = DataExtractor(xmlEventReader, xmlEventParser)
+    private val dataExtractor = DataExtractor(ParzherStaxReader(xmlEventReader), XmlEventParser(filters))
     private val objectExtractor = ObjectExtractor(clazz)
 
-    override fun iterator() = ParzherIterator<T>(this)
+    override fun iterator() = ParzherIterator(this)
 
     fun next(): T? {
         val attrs = dataExtractor.next() ?: return null

@@ -1,9 +1,13 @@
 package com.sudzhaev.parzher
 
 import java.io.FileInputStream
+import javax.xml.bind.JAXBContext
+import javax.xml.bind.Unmarshaller
 import javax.xml.stream.XMLInputFactory
 
-data class ValueDto(val param: String, val size: String, val n: Int?)
+data class ValueDto(val param: String, val innerClass: InnerClass?, val n: Int?)
+
+val unmarshaller: Unmarshaller = JAXBContext.newInstance(InnerClass::class.java).createUnmarshaller()
 
 fun main() {
     val xmlInputFactory = XMLInputFactory.newInstance()
@@ -30,11 +34,9 @@ fun buildFilterDsl() = filters {
                 nested {
                     tag("element") {
                         terminate()
+                        unmarhsal(InnerClass::class.java, unmarshaller)
                         attributes {
                             attribute(name = "size", value = "s")
-                        }
-                        extract {
-                            attribute("size")
                         }
                     }
                 }

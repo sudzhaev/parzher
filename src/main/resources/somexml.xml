@@ -4,7 +4,10 @@
             <name>Haha</name>
         </variables>
         <elements val="2" param="ppp" num="13">
-            <element size="s" name="1"/>
+            <element size="s" name="1">
+                <tagone>Hi there</tagone>
+                <tagtwo attr="2">Tag two</tagtwo>
+            </element>
             <element size="m" name="2"/>
             <element size="l" name="3"/>
             <element size="s" name="4"/>
@@ -34,7 +37,7 @@
         <variables>
             <name>Haha</name>
         </variables>
-        <elements val="2" param="zzz">
+        <elements val="2" param="zzz" num="39">
             <element size="s" name="1"/>
             <element size="m" name="2"/>
             <element size="l" name="3"/>

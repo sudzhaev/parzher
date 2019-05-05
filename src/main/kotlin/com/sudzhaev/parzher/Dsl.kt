@@ -1,5 +1,7 @@
 package com.sudzhaev.parzher
 
+import javax.xml.bind.Unmarshaller
+
 @DslMarker
 annotation class XmlFilterDsl
 
@@ -60,6 +62,7 @@ class XMLFilterListBuilder {
 class XMLFilterBuilder(val name: String) {
 
     private var terminate = false
+    private var unmarshalWrapper: UnmarshalWrapper<Any>? = null
     private val attributes = mutableListOf<Attribute>()
     private val nestedTags = mutableListOf<XMLFilter>()
     private val extract = mutableListOf<Extract<Any>>()
@@ -80,9 +83,13 @@ class XMLFilterBuilder(val name: String) {
         terminate = true
     }
 
+    fun <T: Any> unmarhsal(clazz: Class<T>, unmarshaller: Unmarshaller, propertyName: String = clazz.simpleName.decapitalize()) {
+        this.unmarshalWrapper = UnmarshalWrapper(clazz, unmarshaller, propertyName)
+    }
+
     fun build(): XMLFilter {
         if (name.isEmpty()) throw InvalidFilterException("Tag name cannot be empty")
-        return XMLFilter(Tag(name, attributes, extract, terminate), nestedTags)
+        return XMLFilter(Tag(name, attributes, extract, terminate, unmarshalWrapper), nestedTags)
     }
 }
 

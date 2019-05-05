@@ -52,10 +52,14 @@ class XmlEventParser(private val xmlFilters: List<XMLFilter>) {
             skipStack.pop()
         }
         if (readStack.peekOrNull()?.name == tagName) {
-            filterStack.pop()
-            readStack.pop()
+            pop()
             return EndTag
         }
         return null
+    }
+
+    fun pop() {
+        filterStack.pop()
+        readStack.pop()
     }
 }
