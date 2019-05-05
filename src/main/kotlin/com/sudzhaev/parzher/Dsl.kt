@@ -59,13 +59,13 @@ class XMLFilterListBuilder {
 }
 
 @XmlFilterDsl
-class XMLFilterBuilder(val name: String) {
+class XMLFilterBuilder(private val name: String) {
 
     private var terminate = false
-    private var unmarshalWrapper: UnmarshalWrapper<*>? = null
+    private var customUnmarshaller: CustomUnmarshaller<*>? = null
     private val attributes = mutableListOf<Attribute>()
     private val nestedTags = mutableListOf<XMLFilter>()
-    private val extract = mutableListOf<Extract<Any>>()
+    private val extract = mutableListOf<Extract<*>>()
 
     fun attributes(block: AttributeListBuilder.() -> Unit) {
         attributes.addAll(AttributeListBuilder().apply(block).build())
@@ -87,29 +87,29 @@ class XMLFilterBuilder(val name: String) {
                            unmarshaller: Unmarshaller,
                            propertyName: String = clazz.simpleName.decapitalize(),
                            resultHandler: (T) -> T? = { it }) {
-        this.unmarshalWrapper = UnmarshalWrapper(clazz, unmarshaller, propertyName, resultHandler)
+        this.customUnmarshaller = CustomUnmarshaller(clazz, unmarshaller, propertyName, resultHandler)
     }
 
     fun build(): XMLFilter {
         if (name.isEmpty()) throw InvalidFilterException("Tag name cannot be empty")
-        return XMLFilter(Tag(name, attributes, extract, terminate, unmarshalWrapper), nestedTags)
+        return XMLFilter(Tag(name, attributes, extract, terminate, customUnmarshaller), nestedTags)
     }
 }
 
 @XmlFilterDsl
 class ExtractBuilder {
 
-    private val attributes = mutableListOf<Extract<Any>>()
+    private val attributes = mutableListOf<Extract<*>>()
 
-    fun attribute(attributeName: String, newName: String = attributeName) {
-        attributes.add(Extract(attributeName, newName) { it })
+    fun attribute(attributeName: String, propertyName: String = attributeName) {
+        attributes.add(Extract(attributeName, propertyName) { it })
     }
 
-    fun <T : Any> attribute(attributeName: String, propertyName: String = attributeName, extractor: (String?) -> T?) {
+    fun <T> attribute(attributeName: String, propertyName: String = attributeName, extractor: (String?) -> T?) {
         attributes.add(Extract(attributeName, propertyName, extractor))
     }
 
-    fun build(): MutableList<Extract<Any>> {
+    fun build(): MutableList<Extract<*>> {
         if (attributes.isEmpty()) throw InvalidFilterException(
             """
             Extract attributes cannot be empty:

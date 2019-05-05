@@ -21,7 +21,7 @@ class ParzherTest : StringSpec({
             tag("div") {
                 terminate()
                 extract {
-                    attribute("class", newName = "classAttr")
+                    attribute("class", propertyName = "classAttr")
                 }
             }
         }

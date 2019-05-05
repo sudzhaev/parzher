@@ -17,7 +17,7 @@ operator fun StartElement.contains(attributes: List<Attribute>) =
 
 fun <T> Stack<T>.peekOrNull(): T? = if (isNotEmpty()) peek() else null
 
-fun StartElement.getAttributes(attributes: List<Extract<Any>>): Map<String, Any?> {
+fun StartElement.getAttributes(attributes: List<Extract<*>>): Map<String, Any?> {
     return attributes
         .map { (attributeName, propertyName, converter) -> propertyName to converter(this[attributeName]) }
         .toMap()

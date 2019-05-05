@@ -11,7 +11,7 @@ class Parzher<T>(clazz: Class<T>, xmlEventReader: XMLEventReader, filters: List<
 
     fun next(): T? {
         val attrs = dataExtractor.next() ?: return null
-        return objectExtractor.get(attrs);
+        return objectExtractor.get(attrs)
     }
 }
 
