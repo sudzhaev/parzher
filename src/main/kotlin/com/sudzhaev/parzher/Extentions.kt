@@ -8,9 +8,9 @@ import javax.xml.stream.events.Attribute as XmlAttribute
 
 operator fun StartElement.get(attributeName: String) = getAttributeByName(QName.valueOf(attributeName))?.value
 
-fun StartElement.localname(): String = name.localPart
+fun StartElement.name(): String = name.localPart
 
-fun EndElement.localname(): String = name.localPart
+fun EndElement.name(): String = name.localPart
 
 operator fun StartElement.contains(attributes: List<Attribute>) =
     attributes.all { (name, value) -> this[name] == value }

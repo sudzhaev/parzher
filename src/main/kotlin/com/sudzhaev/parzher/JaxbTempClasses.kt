@@ -18,14 +18,10 @@ class InnerClass() {
         @XmlValue
         var value: String? = null
 
-        override fun toString(): String {
-            return "TagTwo(attr=$attr, value=$value)"
-        }
+        override fun toString() = "TagTwo(attr=$attr, value=$value)"
     }
 
-    override fun toString(): String {
-        return "InnerClass(tagone=$tagone, tagtwo=$tagtwo)"
-    }
+    override fun toString() = "InnerClass(tagone=$tagone, tagtwo=$tagtwo)"
 }
 
 fun innerClassOrNull(innerClass: InnerClass): InnerClass? {

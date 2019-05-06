@@ -53,7 +53,9 @@ class XMLFilterListBuilder {
     }
 
     fun build(): MutableList<XMLFilter> {
-        if (xmlFilters.isEmpty()) throw InvalidFilterException("Filter list cannot be empty")
+        if (xmlFilters.isEmpty()) {
+            throw InvalidFilterException("Filter list cannot be empty")
+        }
         return xmlFilters
     }
 }
@@ -83,15 +85,19 @@ class XMLFilterBuilder(private val name: String) {
         terminate = true
     }
 
-    fun <T: Any> unmarhsal(clazz: Class<T>,
-                           unmarshaller: Unmarshaller,
-                           propertyName: String = clazz.simpleName.decapitalize(),
-                           resultHandler: (T) -> T? = { it }) {
+    fun <T : Any> unmarhsal(
+        clazz: Class<T>,
+        unmarshaller: Unmarshaller,
+        propertyName: String = clazz.simpleName.decapitalize(),
+        resultHandler: (T) -> T? = { it }
+    ) {
         this.customUnmarshaller = CustomUnmarshaller(clazz, unmarshaller, propertyName, resultHandler)
     }
 
     fun build(): XMLFilter {
-        if (name.isEmpty()) throw InvalidFilterException("Tag name cannot be empty")
+        if (name.isEmpty()) {
+            throw InvalidFilterException("Tag name cannot be empty")
+        }
         return XMLFilter(Tag(name, attributes, extract, terminate, customUnmarshaller), nestedTags)
     }
 }
@@ -110,12 +116,13 @@ class ExtractBuilder {
     }
 
     fun build(): MutableList<Extract<*>> {
-        if (attributes.isEmpty()) throw InvalidFilterException(
-            """
-            Extract attributes cannot be empty:
-            specify at least one attribute or
-            remove extract block""".simplify()
-        )
+        if (attributes.isEmpty()) {
+            throw InvalidFilterException(
+                """Extract attributes cannot be empty:
+                    specify at least one attribute or
+                    remove extract block""".simplify()
+            )
+        }
         return attributes
     }
 }
@@ -130,12 +137,13 @@ class AttributeListBuilder {
     }
 
     fun build(): MutableList<Attribute> {
-        if (attributes.isEmpty()) throw InvalidFilterException(
-            """
-            Attribute list cannot be empty:
-            specify at least one attribute or
-            remove attribute block""".simplify()
-        )
+        if (attributes.isEmpty()) {
+            throw InvalidFilterException(
+                """Attribute list cannot be empty:
+                    specify at least one attribute or
+                    remove attribute block""".simplify()
+            )
+        }
         return attributes
     }
 }

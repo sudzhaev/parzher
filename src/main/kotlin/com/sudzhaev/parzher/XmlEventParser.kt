@@ -27,27 +27,19 @@ class XmlEventParser(private val xmlFilters: List<XMLFilter>) {
         if (skipStack.isNotEmpty()) {
             return null
         }
-        val tagName = startElement.localname()
-        filterStack.peek()
-            .asSequence()
-            .map { it.tag }
-            .filter { it.name == tagName }
-            .filter { it.attributes in startElement }
-            .forEach { filterTag ->
-                val lastRead = readStack.peekOrNull()
-                val parentTag = reversedFlatFilter[filterTag]
-                if (parentTag == null || lastRead == parentTag) {
-                    filterStack.push(filterStack.peek().flatMap { it.nestedFilters })
-                    readStack.push(filterTag)
-                    return StartTag(filterTag)
-                }
-                skipStack.push(tagName)
+        getFilterTags(startElement).forEach { filterTag ->
+            if (isFilterMatches(filterTag)) {
+                filterStack.push(filterStack.peek().flatMap { it.nestedFilters })
+                readStack.push(filterTag)
+                return StartTag(filterTag)
             }
+            skipStack.push(startElement.name())
+        }
         return null
     }
 
     private fun handleEndElement(endElement: EndElement): EndTag? {
-        val tagName = endElement.localname()
+        val tagName = endElement.name()
         if (skipStack.peekOrNull() == tagName) {
             skipStack.pop()
         }
@@ -56,6 +48,20 @@ class XmlEventParser(private val xmlFilters: List<XMLFilter>) {
             return EndTag
         }
         return null
+    }
+
+    private fun getFilterTags(startElement: StartElement): Sequence<Tag> {
+        return filterStack.peek()
+            .asSequence()
+            .map { it.tag }
+            .filter { it.name == startElement.name() }
+            .filter { it.attributes in startElement }
+    }
+
+    private fun isFilterMatches(filterTag: Tag): Boolean {
+        val lastRead = readStack.peekOrNull()
+        val parentTag = reversedFlatFilter[filterTag]
+        return parentTag == null || lastRead == parentTag
     }
 
     fun pop() {

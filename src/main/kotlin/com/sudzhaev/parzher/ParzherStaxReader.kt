@@ -17,12 +17,8 @@ class ParzherStaxReader(reader: XMLEventReader) : XMLEventReader by reader, Iter
         return previousEvent != null
     }
 
-    override fun next(): XMLEvent? {
-        return previousEvent
-    }
+    override fun next(): XMLEvent? = previousEvent
 
-    override fun iterator(): Iterator<XMLEvent> {
-        @Suppress("UNCHECKED_CAST")
-        return this as Iterator<XMLEvent>
-    }
+    @Suppress("UNCHECKED_CAST")
+    override fun iterator(): Iterator<XMLEvent> = this as Iterator<XMLEvent>
 }
