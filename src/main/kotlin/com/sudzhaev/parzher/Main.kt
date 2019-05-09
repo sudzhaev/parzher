@@ -5,7 +5,7 @@ import javax.xml.bind.JAXBContext
 import javax.xml.bind.Unmarshaller
 import javax.xml.stream.XMLInputFactory
 
-data class ValueDto(val param: String, val innerClass: InnerClass?, val n: Int?)
+data class ValueDto(val param: String, val name: String, val innerClass: InnerClass?, val n: Int?)
 
 val unmarshaller: Unmarshaller = JAXBContext.newInstance(InnerClass::class.java).createUnmarshaller()
 
@@ -20,12 +20,12 @@ fun main() {
 fun buildFilterDsl() = filters {
     tag("div") {
         attributes {
-            attribute(name = "class", value = "name")
+            attribute("class", isEqualTo("name"))
         }
         nested {
             tag("elements") {
                 attributes {
-                    attribute(name = "val", value = "2")
+                    attribute("val", isMoreThan(1))
                 }
                 extract {
                     attribute("param")
@@ -36,7 +36,10 @@ fun buildFilterDsl() = filters {
                         terminate()
                         unmarhsal(InnerClass::class.java, unmarshaller, resultHandler = ::innerClassOrNull)
                         attributes {
-                            attribute(name = "size", value = "s")
+                            attribute( "size", isEqualTo("s"))
+                        }
+                        extract {
+                            attribute("name")
                         }
                     }
                 }

@@ -12,8 +12,8 @@
             <element size="l" name="3"/>
             <element size="s" name="4"/>
         </elements>
-        <elements val="1" param="qqq" num="15">
-            <element size="s" name="5"/>
+        <elements val="3" param="qqq" num="15">
+            <element size="s" name="5qqq"/>
             <element size="m" name="6"/>
             <element size="l" name="7"/>
             <element size="s" name="8"/>

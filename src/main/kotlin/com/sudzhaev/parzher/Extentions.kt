@@ -6,14 +6,14 @@ import javax.xml.stream.events.EndElement
 import javax.xml.stream.events.StartElement
 import javax.xml.stream.events.Attribute as XmlAttribute
 
-operator fun StartElement.get(attributeName: String) = getAttributeByName(QName.valueOf(attributeName))?.value
+operator fun StartElement.get(attributeName: String): String? = getAttributeByName(QName.valueOf(attributeName))?.value
 
 fun StartElement.name(): String = name.localPart
 
 fun EndElement.name(): String = name.localPart
 
 operator fun StartElement.contains(attributes: List<Attribute>) =
-    attributes.all { (name, value) -> this[name] == value }
+    attributes.all { (name, matcher) -> matcher(this[name]) }
 
 fun <T> Stack<T>.peekOrNull(): T? = if (isNotEmpty()) peek() else null
 

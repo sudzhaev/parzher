@@ -132,8 +132,8 @@ class AttributeListBuilder {
 
     private val attributes = mutableListOf<Attribute>()
 
-    fun attribute(name: String, value: String) {
-        attributes.add(Attribute(name, value))
+    fun attribute(name: String, matcher: AttributeMatcher) {
+        attributes.add(Attribute(name, matcher))
     }
 
     fun build(): MutableList<Attribute> {

@@ -3,7 +3,7 @@ package com.sudzhaev.parzher
 import javax.xml.bind.Unmarshaller
 import javax.xml.stream.XMLEventReader
 
-data class Attribute(val name: String, val value: String)
+data class Attribute(val name: String, val matcher: AttributeMatcher)
 
 data class Tag(
     val name: String,
